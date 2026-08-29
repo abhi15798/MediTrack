@@ -5,7 +5,10 @@ import com.airtribe.meditrack.exception.InvalidDataException;
 import com.airtribe.meditrack.util.DataStore;
 import com.airtribe.meditrack.util.IdGenerator;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
 
 public class AppointmentService {
 
@@ -18,20 +21,28 @@ public class AppointmentService {
         this.patientService = patientService;
     }
 
-    public Appointment bookAppointment(String doctorId, String patientId, String timeSlotId) {
+    public Appointment bookAppointment(String doctorId, String patientId) {
         Doctor doctor = doctorService.searchById(doctorId);   // throws if doctor doesn't exist
         Patient patient = patientService.searchById(patientId); // throws if patient doesn't exist
 
-        TimeSlot slot = doctor.findTimeSlotById(timeSlotId)
-                .orElseThrow(() -> new InvalidDataException("No such time slot for this doctor"));
-
-        slot.book(); // throws IllegalStateException if not AVAILABLE — fails loud, no silent double-booking
+//        TimeSlot slot = doctor.findTimeSlotById(timeSlotId)
+//                .orElseThrow(() -> new InvalidDataException("No such time slot for this doctor"));
+//
+//        slot.book(); // throws IllegalStateException if not AVAILABLE — fails loud, no silent double-booking
 
         String appointmentId = IdGenerator.getInstance().generateId("APT");
-        Appointment appointment = new Appointment(appointmentId, LocalDateTime.now(),
-                doctorId, patientId, timeSlotId);
+        Appointment appointment = new Appointment(appointmentId, LocalDate.now(),
+                doctorId, patientId);
 
         appointmentStore.save(appointmentId, appointment);
         return appointment;
+    }
+    
+    public Optional<Appointment> searchById(String appointmentId) {
+        return appointmentStore.findById(appointmentId);
+    }
+
+    public List<Appointment> findAllAppointments() {
+        return appointmentStore.findAll();
     }
 }

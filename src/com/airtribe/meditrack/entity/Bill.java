@@ -2,48 +2,61 @@ package com.airtribe.meditrack.entity;
 
 import com.airtribe.meditrack.interfaces.BillingStrategy;
 import com.airtribe.meditrack.interfaces.Payable;
-import com.airtribe.meditrack.interfaces.Searchable;
-import com.sun.media.sound.InvalidDataException;
+import com.airtribe.meditrack.interfaces.PaymentStrategy;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 public class Bill extends MedicalEntity implements Payable {
-    private final String appointmentId;
-    private final String patientId;
-    private final double baseAmount;
-    private final BillingStrategy strategy;
+//    private final String appointmentId;
+    private final String patientName;
+    private final String doctorName;
+    private final double consultationCharges;
+    private final double medicineCharges;
+    private BillingStrategy billingStrategy;
+    private PaymentStrategy paymentStrategy;
+    private final LocalDate generatedOn;
     private boolean paid;
-    public Bill(String id, LocalDateTime createdDate,
-                String appointmentId, String patientId,
-                double baseAmount, BillingStrategy strategy) {
-        super(id, createdDate);
-        this.appointmentId = appointmentId;
-        this.patientId = patientId;
-        this.baseAmount = baseAmount;
-        this.strategy = strategy;
+
+    public Bill(String id, String patientName, String doctorName,
+                double consultationCharges, double medicineCharges, LocalDate generatedOn) {
+        super(id, generatedOn);
+//        this.appointmentId = appointmentId;
+        this.patientName = patientName;
+        this.doctorName = doctorName;
+        this.consultationCharges = consultationCharges;
+        this.medicineCharges = medicineCharges;
+        this.generatedOn = generatedOn;
         this.paid = false;
     }
 
-    public double generateBill() {
-        return strategy.calculate(baseAmount);
+    public void setBillingStrategy(BillingStrategy billingStrategy) {
+        this.billingStrategy = billingStrategy;
     }
+
+    public void setPaymentStrategy(PaymentStrategy paymentStrategy) {
+        this.paymentStrategy = paymentStrategy;
+    }
+
+    public double generateBill() {
+        return billingStrategy.calculate(consultationCharges + medicineCharges);
+    }
+
     public BillSummary toSummary() {
         double total = generateBill();
-        return new BillSummary(getId(), patientId, total, getCreatedDate());
+        return new BillSummary(getId(), patientName, doctorName, total, generatedOn);
     }
 
     @Override
     public String getDetails() {
-        return "Bill{id='" + getId() + "', appointmentId='" + appointmentId +
-                "', total=" + generateBill() + ", paid=" + paid + "}";
+        return "Bill{id='" + getId() + "', patientName='" + patientName +
+                "', total=" + generateBill() + ", paid=" + generateBill() + "}";
     }
 
     @Override
-    public void pay() {
-        if (paid) {
-            throw new IllegalStateException("Bill " + getId() + " is already paid");
-        }
+    public void pay(double amount) {
+        paymentStrategy.pay(amount);
         paid = true;
+        toSummary().printBillSummary();
     }
 
     @Override

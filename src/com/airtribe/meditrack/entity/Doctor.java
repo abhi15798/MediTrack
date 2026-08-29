@@ -56,4 +56,14 @@ public class Doctor extends Person{
     public String getRole() {
         return "Doctor";
     }
+
+    @Override
+    public String toString() {
+        return "Doctor{" +
+                super.toString() +
+                "specialization=" + specialization +
+                ", fee=" + fee +
+                ", availability=" + availability +
+                '}';
+    }
 }

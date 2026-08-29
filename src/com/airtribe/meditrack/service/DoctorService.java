@@ -62,6 +62,10 @@ public class DoctorService implements Searchable {
                 .collect(Collectors.toList());
     }
 
+    public List<Doctor> findAllDoctors() {
+        return doctorStore.findAll();
+    }
+
     // Bonus D — filter by specialization
     public List<Doctor> filterBySpecialization(Specialization specialization) {
         return doctorStore.findAll().stream()

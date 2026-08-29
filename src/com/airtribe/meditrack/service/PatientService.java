@@ -53,6 +53,10 @@ public class PatientService implements Searchable<Patient> {
                 .collect(Collectors.toList());
     }
 
+    public List<Patient> findAllPatients() {
+        return patientStore.findAll();
+    }
+
     // Patient-specific overload — not part of Searchable<T>, per the age-mismatch decision
     public List<Patient> searchByAge(int age) {
         return patientStore.findAll().stream()

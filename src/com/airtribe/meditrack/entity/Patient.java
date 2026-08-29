@@ -47,4 +47,13 @@ public class Patient extends Person implements  Cloneable{
             throw new AssertionError("Patient implements Cloneable, this should never happen", e);
         }
     }
+
+    @Override
+    public String toString() {
+        return "Patient{" +
+                super.toString() +
+                "medicalHistory=" + medicalHistory +
+                ", dob=" + dob +
+                '}';
+    }
 }

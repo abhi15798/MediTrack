@@ -1,6 +1,5 @@
 package com.airtribe.meditrack.interfaces;
 
-public interface Payable {
+public interface PaymentStrategy {
     void pay(double amount);
-    boolean isPaid();
 }

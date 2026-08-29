@@ -1,7 +1,6 @@
 package com.airtribe.meditrack.util;
 
 import com.airtribe.meditrack.constants.Constants;
-import com.airtribe.meditrack.entity.Patient;
 import com.airtribe.meditrack.interfaces.BillingStrategy;
 
 public class DiscountBillingStrategy implements BillingStrategy {
