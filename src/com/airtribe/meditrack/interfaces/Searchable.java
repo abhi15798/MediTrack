@@ -4,5 +4,5 @@ import java.util.List;
 
 public interface Searchable<T> {
     T searchById(String id);
-    List<T> searchByName(String name);
+    List<T> search(String name);
 }

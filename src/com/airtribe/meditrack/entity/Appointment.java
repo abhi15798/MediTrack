@@ -1,26 +1,25 @@
 package com.airtribe.meditrack.entity;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public class Appointment extends MedicalEntity implements Cloneable{
     private String doctorId;
     private String patientId;
-//    private String timeSlotId;
+    private String timeSlotId;
     private AppointmentStatus status;
 
-    public Appointment(String id, LocalDate createdDate,
-                       String doctorId, String patientId) {
+    public Appointment(String id, LocalDateTime createdDate,
+                       String doctorId, String patientId, String timeSlotId) {
         super(id, createdDate);
         this.doctorId = doctorId;
         this.patientId = patientId;
-//        this.timeSlotId = timeSlotId;
+        this.timeSlotId = timeSlotId;
         this.status = AppointmentStatus.CONFIRMED;;
     }
 
     public String getDoctorId() { return doctorId; }
     public String getPatientId() { return patientId; }
-//    public String getTimeSlotId() { return timeSlotId; }
+    public String getTimeSlotId() { return timeSlotId; }
     public AppointmentStatus getStatus() { return status; }
 
     public void complete() { status = AppointmentStatus.COMPLETED; }
@@ -47,6 +46,7 @@ public class Appointment extends MedicalEntity implements Cloneable{
                 super.toString() +
                 "doctorId='" + doctorId + '\'' +
                 ", patientId='" + patientId + '\'' +
+                ", timeSlotId='" + timeSlotId + '\'' +
                 ", status=" + status +
                 '}';
     }

@@ -1,6 +1,5 @@
 package com.airtribe.meditrack.entity;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public class BillSummary {
@@ -8,10 +7,10 @@ public class BillSummary {
     private final String patientName;
     private final String doctorName;
     private final double totalAmount;
-    private final LocalDate generatedOn;
+    private final LocalDateTime generatedOn;
 
     public BillSummary(String billId, String patientName, String doctorName, double totalAmount,
-                       LocalDate generatedOn) {
+                       LocalDateTime generatedOn) {
         this.billId = billId;
         this.patientName = patientName;
         this.doctorName = doctorName;
@@ -31,7 +30,7 @@ public class BillSummary {
         return totalAmount;
     }
 
-    public LocalDate getGeneratedOn() {
+    public LocalDateTime getGeneratedOn() {
         return generatedOn;
     }
 

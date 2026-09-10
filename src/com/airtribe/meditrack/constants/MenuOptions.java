@@ -7,7 +7,8 @@ public class MenuOptions {
     public static final String DOCTOR_MANAG_MENU = "2. Doctor Management";
     public static final String PATIENT_MANAG_MENU = "3. Patient Management";
     public static final String APPOINTMENT_MANAG_MENU = "4. Appointment Management";
-    public static final String EXIT_APPLICATION = "5. Exit Application";
+    public static final String AI_ASSISTANT = "5. AI Assistant";
+    public static final String EXIT_APPLICATION = "6. Exit Application";
 
     public static final String BILLING_MANAG_SUBMENU = " BILLING MANAGEMENT SUB-MENU ";
     public static final String GENERATE_BILL = "1. Generate Bill";
@@ -16,15 +17,27 @@ public class MenuOptions {
 
     public static final String DOCTOR_MANAG_SUBMENU = " DOCTOR MANAGEMENT SUB-MENU ";
     public static final String CREATE_DOCTOR = "1. Create Doctor";
-    public static final String VIEW_DOCTORS = "2. View Doctors";;
+    public static final String SEARCH_DOCTOR_BY_ID = "2. Search by Doctor Id";
+    public static final String SEARCH_DOCTOR_BY_NAME = "3. Search by Doctor Name";
+    public static final String VIEW_DOCTORS = "4. View Doctors";
+    public static final String UPDATE_DOCTOR_FEE = "5. Update Doctor Fee";
+    public static final String UPDATE_DOCTOR_CONTACT = "6. Update Doctor Contact";
+    public static final String DELETE_DOCTOR = "7. Delete Doctor";
 
     public static final String PATIENT_MANAG_SUBMENU = " PATIENT MANAGEMENT SUB-MENU ";
     public static final String CREATE_PATIENT = "1. Create Patient";
-    public static final String VIEW_PATIENTS = "2. View Patients";
+    public static final String SEARCH_PATIENT_BY_ID = "2. Search by Patient Id";
+    public static final String SEARCH_PATIENT_BY_NAME = "3. Search by Patient Name";
+    public static final String VIEW_PATIENTS = "4. View Patients";
+    public static final String UPDATE_PATIENT_CONTACT = "5. Update Patient Contact";
+    public static final String DELETE_PATIENT = "6. Delete Patient";
 
     public static final String APPOINTMENT_MANAG_SUBMENU = " APPOINTMENT MANAGEMENT SUB-MENU ";
     public static final String CREATE_APPOINTMENT = "1. Create Appointment";
-    public static final String VIEW_APPOINTMENTS = "2. View Appointments";
+    public static final String VIEW_APPOINTMENT = "2. View Appointment By Id";
+    public static final String VIEW_APPOINTMENTS = "3. View Appointments";
+    public static final String CANCEL_APPOINTMENT = "4. Cancel Appointment";
+    public static final String VIEW_DOCTOR_AVAILABILITY = "5. View Doctor Availability";
 
     public static final String PAYMENT_MENU = " Please select payment mode ";
     public static final String UPI_PAYMENT = "1. UPI";
@@ -32,12 +45,11 @@ public class MenuOptions {
     public static final String CARD_PAYMENT = "3. Card";
 
     public static final String SPECIALIZATION_MENU = " Please select Doctor's specialization ";
-    public static final String GENERAL_SPECIALIZATION = "1. General";
+    public static final String GENERAL_SPECIALIZATION = "1. General Physician";
     public static final String CARDIOLOGY_SPECIALIZATION = "2. Cardiology";
     public static final String DERMATOLOGY_SPECIALIZATION = "3. Dermatology";
     public static final String ORTHOPEDICS_SPECIALIZATION = "4. Orthopedics";
-    public static final String GENERAL_MEDICINE_SPECIALIZATION = "5. General Medicine";
-    public static final String PEDIATRICS_SPECIALIZATION = "6. Pediatrics";
+    public static final String PEDIATRICS_SPECIALIZATION = "5. Pediatrics";
 
     public static final String GO_BACK_TO_MAIN_MENU = "Go Back to Main Menu";
     public static final String RETURNING_MAIN_MENU = "Returning to Main Menu...";

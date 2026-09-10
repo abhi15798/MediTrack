@@ -56,7 +56,7 @@ public class DoctorService implements Searchable {
     }
 
     @Override
-    public List<Doctor> searchByName(String name) {
+    public List<Doctor> search(String name) {
         return doctorStore.findAll().stream()
                 .filter(doc -> doc.getName().equalsIgnoreCase(name))
                 .collect(Collectors.toList());

@@ -5,6 +5,7 @@ import com.airtribe.meditrack.interfaces.Payable;
 import com.airtribe.meditrack.interfaces.PaymentStrategy;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 public class Bill extends MedicalEntity implements Payable {
 //    private final String appointmentId;
@@ -14,11 +15,11 @@ public class Bill extends MedicalEntity implements Payable {
     private final double medicineCharges;
     private BillingStrategy billingStrategy;
     private PaymentStrategy paymentStrategy;
-    private final LocalDate generatedOn;
+    private final LocalDateTime generatedOn;
     private boolean paid;
 
     public Bill(String id, String patientName, String doctorName,
-                double consultationCharges, double medicineCharges, LocalDate generatedOn) {
+                double consultationCharges, double medicineCharges, LocalDateTime generatedOn) {
         super(id, generatedOn);
 //        this.appointmentId = appointmentId;
         this.patientName = patientName;

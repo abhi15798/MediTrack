@@ -5,6 +5,7 @@ import com.airtribe.meditrack.exception.InvalidDataException;
 import java.util.regex.Matcher;
 
 import static com.airtribe.meditrack.constants.AppConstants.*;
+import static com.airtribe.meditrack.constants.MenuOptions.INVALID_NUMBER;
 
 public class Validator {
 
@@ -22,12 +23,30 @@ public class Validator {
         }
     }
 
-    public static boolean isValidAmount(double amount) {
-        return amount >= 0.0;
+    public static boolean isValidAmount(String amount) {
+        try {
+            double d = Double.parseDouble(amount);
+            if (d <= 0.00) {
+                throw new InvalidDataException("Amount must be greater than 0");
+            }
+            return d >= 0.0;
+        } catch (NumberFormatException e) {
+            System.out.println(EQUALS + INVALID_NUMBER + e + " " + EQUALS);
+            return false;
+        } catch (InvalidDataException e) {
+            System.out.println(EQUALS + e.getMessage() + " " + EQUALS);
+            return false;
+        }
     }
 
-    public static boolean isValidDiscount(int percentage) {
-        return (percentage >= 0 && percentage < 100);
+    public static boolean isValidDiscount(String percentage) {
+        try {
+            double discount = Double.parseDouble(percentage);
+            return (discount >= 0 && discount < 100);
+        } catch (NumberFormatException e) {
+            System.out.println(EQUALS + INVALID_NUMBER + e + " " + EQUALS);
+            return false;
+        }
     }
 
     public static boolean isValidPaymentChoice(int paymentChoice) {
@@ -131,6 +150,16 @@ public class Validator {
         // \\d+ checks if it is followed by one or more digits
         if (id == null || !id.matches("^DOC-\\d+")) {
             System.out.println(EQUALS + " Invalid doctor id, please search with valid id. " + EQUALS);
+            return false;
+        }
+        return true;
+    }
+
+    public static boolean isValidTimeslotId(String id) {
+        // ^TS checks if it starts with TS
+        // \\d+ checks if it is followed by one or more digits
+        if (id == null || !id.matches("^TS-\\d+")) {
+            System.out.println(EQUALS + " Invalid time slot id, please search with valid id. " + EQUALS);
             return false;
         }
         return true;

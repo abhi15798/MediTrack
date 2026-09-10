@@ -5,9 +5,9 @@ import com.airtribe.meditrack.interfaces.BillingStrategy;
 
 public class DiscountBillingStrategy implements BillingStrategy {
 
-    private final int discountPercent;
+    private final double discountPercent;
 
-    public DiscountBillingStrategy(int discountPercent) {
+    public DiscountBillingStrategy(double discountPercent) {
         if (discountPercent < 0 || discountPercent > 100) {
             throw new IllegalArgumentException("discountPercent must be between 0 and 100");
         }

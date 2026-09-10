@@ -47,7 +47,7 @@ public class PatientService implements Searchable<Patient> {
     }
 
     @Override
-    public List<Patient> searchByName(String name) {
+    public List<Patient> search(String name) {
         return patientStore.findAll().stream()
                 .filter(p -> p.getName().equalsIgnoreCase(name))
                 .collect(Collectors.toList());
@@ -58,7 +58,7 @@ public class PatientService implements Searchable<Patient> {
     }
 
     // Patient-specific overload — not part of Searchable<T>, per the age-mismatch decision
-    public List<Patient> searchByAge(int age) {
+    public List<Patient> search(int age) {
         return patientStore.findAll().stream()
                 .filter(p -> p.getAge() == age)
                 .collect(Collectors.toList());

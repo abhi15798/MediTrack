@@ -1,13 +1,12 @@
 package com.airtribe.meditrack.entity;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public abstract class MedicalEntity {
     private final String id;
-    private final LocalDate createdDate;
+    private final LocalDateTime createdDate;
 
-    public MedicalEntity(String id, LocalDate createdDate) {
+    public MedicalEntity(String id, LocalDateTime createdDate) {
         this.id = id;
         this.createdDate = createdDate;
     }
@@ -16,7 +15,7 @@ public abstract class MedicalEntity {
         return id;
     }
 
-    public LocalDate getCreatedDate() {
+    public LocalDateTime getCreatedDate() {
         return createdDate;
     }
     // abstract — Appointment and Bill each override this differently;
