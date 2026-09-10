@@ -13,6 +13,7 @@ public class AIHelper {
     private static AIHelper instance;
 
     // 1. Keep your API key secure (ideally read from an environment variable)
+    private static final String API_KEY = "key";
     private static final String API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent";
 
     private static final HttpClient client = HttpClient.newBuilder()
