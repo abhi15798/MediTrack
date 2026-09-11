@@ -1,5 +1,7 @@
 package com.airtribe.meditrack.entity;
 
+import com.airtribe.meditrack.interfaces.NotificationStrategy;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -10,8 +12,8 @@ public class Doctor extends Person{
     private List<TimeSlot> availability;
 
     public Doctor(String id, String name, String contactNo,
-                  Specialization specialization, double fee) {
-        super(id, name, contactNo);
+                  Specialization specialization, double fee, List<NotificationStrategy> notificationStrategies) {
+        super(id, name, contactNo, notificationStrategies);
         this.specialization = specialization;
         this.fee = fee;
         this.availability  = new ArrayList<>();
@@ -66,4 +68,5 @@ public class Doctor extends Person{
                 ", availability=" + availability +
                 '}';
     }
+
 }

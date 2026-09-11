@@ -1,12 +1,10 @@
 package com.airtribe.meditrack.service;
 
 import com.airtribe.meditrack.entity.Bill;
-import com.airtribe.meditrack.entity.Payment;
 import com.airtribe.meditrack.interfaces.BillingStrategy;
 import com.airtribe.meditrack.interfaces.PaymentStrategy;
 import com.airtribe.meditrack.util.*;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Optional;
 

@@ -1,19 +1,24 @@
 package com.airtribe.meditrack.entity;
 
+import com.airtribe.meditrack.interfaces.NotificationObserver;
+import com.airtribe.meditrack.interfaces.NotificationStrategy;
 import com.airtribe.meditrack.util.Validator;
 
+import java.util.List;
 import java.util.Objects;
 
-public abstract class Person {
+public abstract class Person implements NotificationObserver {
 
     private final String id;
     private String name;
     private String contact;
+    private List<NotificationStrategy> notificationStrategies;
 
-    protected Person(String id, String name, String contact) {
+    protected Person(String id, String name, String contact, List<NotificationStrategy> notificationStrategies) {
         this.id = id;
         setName(name);       // route through validated setters even at construction
         setContact(contact); // so an invalid Person can never be constructed
+        setNotificationStrategies(notificationStrategies);
     }
 
     public String getId() {
@@ -42,6 +47,14 @@ public abstract class Person {
     // this is what you call to demonstrate dynamic dispatch (Person ref, subclass behavior)
     public abstract String getRole();
 
+    public List<NotificationStrategy> getNotificationStrategies() {
+        return notificationStrategies;
+    }
+
+    public void setNotificationStrategies(List<NotificationStrategy> notificationStrategies) {
+        this.notificationStrategies = notificationStrategies;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -58,5 +71,14 @@ public abstract class Person {
     @Override
     public String toString() {
         return getRole() + "{id='" + id + "', name='" + name + "', contact='" + contact + "'}";
+    }
+
+    @Override
+    public void update(String message) {
+        if (notificationStrategies != null && !notificationStrategies.isEmpty()) {
+            for (NotificationStrategy strategy : notificationStrategies) {
+                strategy.update("Hello " + this.name + ", " + message);
+            }
+        }
     }
 }

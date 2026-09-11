@@ -49,8 +49,26 @@ public class Validator {
         }
     }
 
+    public static boolean isValidAge(String strAge) {
+        if (strAge == null || strAge.trim().isEmpty()) {
+            System.out.println("Invalid age. Please enter a valid age.");
+            return false;
+        }
+
+        int age = Integer.parseInt(strAge);
+        return age > 0 && age <= 100;
+    }
+
     public static boolean isValidPaymentChoice(int paymentChoice) {
         return (paymentChoice >= 1 && paymentChoice <= 4);
+    }
+
+    public static boolean isValidSpecializationChoice(int specializationChoice) {
+        return (specializationChoice >= 1 && specializationChoice <= 6);
+    }
+
+    public static boolean isValidNotificationStrategyChoice(int notStrat) {
+        return (notStrat >= 1 && notStrat <= 4);
     }
 
     /**

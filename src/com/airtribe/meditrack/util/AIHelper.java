@@ -13,8 +13,8 @@ public class AIHelper {
     private static AIHelper instance;
 
     // 1. Keep your API key secure (ideally read from an environment variable)
-    private static final String API_KEY = "key";
-    private static final String API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent";
+    private static final String API_KEY = System.getenv("API_KEY");
+    private static final String API_URL = System.getenv("API_URL");;
 
     private static final HttpClient client = HttpClient.newBuilder()
             .version(HttpClient.Version.HTTP_2) // Force HTTP/2 for faster multiplexing
@@ -32,6 +32,11 @@ public class AIHelper {
 
     public String classifySpecialty(String humanDescription, List<String> availableSpecialties) {
 
+        if (API_KEY == null || API_KEY.isEmpty()) {
+            System.err.println("ERROR: The environment variable 'GEMINI_API_KEY' is not set!");
+            return "General Physician"; // Fallback specialty
+        }
+
         String specialtiesList = String.join(", ", availableSpecialties);
         String jsonPayload = getJsonPayload(humanDescription, specialtiesList);
 
@@ -40,7 +45,7 @@ public class AIHelper {
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(URI.create(API_URL))
                     .header("Content-Type", "application/json")
-                    .header("x-goog-api-key", "dummy") // Key handled here in the headers
+                    .header("x-goog-api-key", API_KEY) // Key handled here in the headers
                     .POST(HttpRequest.BodyPublishers.ofString(jsonPayload))
                     .build();
 

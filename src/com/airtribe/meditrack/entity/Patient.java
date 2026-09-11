@@ -1,5 +1,7 @@
 package com.airtribe.meditrack.entity;
 
+import com.airtribe.meditrack.interfaces.NotificationStrategy;
+
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.ArrayList;
@@ -10,8 +12,8 @@ public class Patient extends Person implements  Cloneable{
     private final LocalDate dob;
     // mutable field — the reason clone() needs to be deep
 
-    public Patient(String id, String name, String contact,LocalDate dob) {
-        super(id, name, contact);
+    public Patient(String id, String name, String contact,LocalDate dob, List<NotificationStrategy> notificationStrategies) {
+        super(id, name, contact, notificationStrategies);
         this.medicalHistory = new ArrayList<>();
         this.dob = dob;
     }
@@ -53,7 +55,9 @@ public class Patient extends Person implements  Cloneable{
         return "Patient{" +
                 super.toString() +
                 "medicalHistory=" + medicalHistory +
-                ", dob=" + dob +
+                ", dob= " + dob +
+                ", age= " + getAge() +
                 '}';
     }
+
 }

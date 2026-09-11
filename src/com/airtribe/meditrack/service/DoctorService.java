@@ -4,6 +4,7 @@ import com.airtribe.meditrack.entity.Doctor;
 import com.airtribe.meditrack.entity.Specialization;
 import com.airtribe.meditrack.entity.TimeSlot;
 import com.airtribe.meditrack.exception.InvalidDataException;
+import com.airtribe.meditrack.interfaces.NotificationStrategy;
 import com.airtribe.meditrack.interfaces.Searchable;
 import com.airtribe.meditrack.util.DataStore;
 import com.airtribe.meditrack.util.IdGenerator;
@@ -16,9 +17,9 @@ public class DoctorService implements Searchable {
     private final DataStore<Doctor> doctorStore = new DataStore<>();
 
     public Doctor createDoctor(String name, String contact,
-                               Specialization specialization, double consultationFee) {
+                               Specialization specialization, double consultationFee, List<NotificationStrategy> notificationStrategies) {
         String id = IdGenerator.getInstance().generateId("DOC");
-        Doctor doctor = new Doctor(id, name, contact, specialization, consultationFee);
+        Doctor doctor = new Doctor(id, name, contact, specialization, consultationFee, notificationStrategies);
         doctorStore.save(id, doctor);
         return doctor;
     }

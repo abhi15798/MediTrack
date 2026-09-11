@@ -1,11 +1,9 @@
 package com.airtribe.meditrack;
 
 import com.airtribe.meditrack.entity.*;
-import com.airtribe.meditrack.exception.CancelInputException;
-import com.airtribe.meditrack.exception.EntityNotFoundException;
-import com.airtribe.meditrack.exception.InvalidDataException;
-import com.airtribe.meditrack.exception.SystemExitException;
+import com.airtribe.meditrack.exception.*;
 import com.airtribe.meditrack.interfaces.BillingStrategy;
+import com.airtribe.meditrack.interfaces.NotificationStrategy;
 import com.airtribe.meditrack.interfaces.PaymentStrategy;
 import com.airtribe.meditrack.service.AppointmentService;
 import com.airtribe.meditrack.service.BillService;
@@ -13,7 +11,6 @@ import com.airtribe.meditrack.service.DoctorService;
 import com.airtribe.meditrack.service.PatientService;
 import com.airtribe.meditrack.util.*;
 
-import javax.print.Doc;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -38,16 +35,16 @@ public class Main {
         System.out.println("MediTrack Application started successfully!");
         System.out.println();
 
-        Doctor doctor1 = doctorService.createDoctor("Dr. Abhi","9876545677", Specialization.CARDIOLOGY,500.00);
-        Doctor doctor2 = doctorService.createDoctor("Dr. Iyer", "9123456780", Specialization.GENERAL_PHYSICIAN, 650.00);
-        Doctor doctor3 = doctorService.createDoctor("Dr. Karthik", "9874444441", Specialization.DERMATOLOGY, 600.00);
-        Doctor doctor4 = doctorService.createDoctor("Dr. Lakshmi", "9874444442", Specialization.ORTHOPEDICS, 600.00);
-        Doctor doctor5 = doctorService.createDoctor("Dr. Rohini", "9874444443", Specialization.PEDIATRICS, 550.00);
+        Doctor doctor1 = doctorService.createDoctor("Dr. Abhi","9876545677", Specialization.CARDIOLOGY,500.00, List.of(new EmailNotifier()));
+        Doctor doctor2 = doctorService.createDoctor("Dr. Iyer", "9123456780", Specialization.GENERAL_PHYSICIAN, 650.00, List.of(new SMSNotifier()));
+        Doctor doctor3 = doctorService.createDoctor("Dr. Karthik", "9874444441", Specialization.DERMATOLOGY, 600.00, List.of(new EmailNotifier(), new SMSNotifier()));
+        Doctor doctor4 = doctorService.createDoctor("Dr. Lakshmi", "9874444442", Specialization.ORTHOPEDICS, 600.00, List.of(new EmailNotifier()));
+        Doctor doctor5 = doctorService.createDoctor("Dr. Rohini", "9874444443", Specialization.PEDIATRICS, 550.00, List.of(new EmailNotifier(), new SMSNotifier()));
 
         System.out.println("created : "+ doctor1.getId() +","+ doctor2.getId());
 
-        Patient patient1 = patientService.createPatient("Zoom","9876543456", LocalDate.of(1990, 5, 14));
-        Patient patient2 = patientService.createPatient("Mike","9876354535", LocalDate.of(2000, 5, 14));
+        Patient patient1 = patientService.createPatient("Zoom","9876543456", LocalDate.of(1990, 5, 14), List.of(new EmailNotifier(), new SMSNotifier()));
+        Patient patient2 = patientService.createPatient("Mike","9876354535", LocalDate.of(2000, 5, 14), List.of(new EmailNotifier(), new SMSNotifier()));
 
         System.out.println("created Patient : "+ patient1.getId() +","+ patient2.getId());
 
@@ -169,7 +166,11 @@ public class Main {
                 handleAppointmentManagementSubMenu(scanner);
                 break;
             case 5:
-                getAIHelp();
+                try {
+                    getAIHelp();
+                } catch (CancelInputException | IllegalArgumentException e) {
+                    System.out.println(e);
+                }
                 break;
             case 6:
                 System.out.println(THANKYOU_GOODBYE);
@@ -181,10 +182,9 @@ public class Main {
     }
 
     private static void getAIHelp() {
-        System.out.println("Welcome to the AI Assistant!");
-        System.out.println("Please describe your symptoms or medical concerns in detail.");
-        System.out.println("The AI will analyze your input and suggest a suitable doctor specialization.");
-        System.out.println("Type 'exit' to return to the main menu.");
+        System.out.println(EQUALS + " Welcome to the AI Assistant! " + EQUALS);
+        System.out.println("Please describe your symptoms or medical concerns in detail. The AI will analyze your input and suggest a suitable doctor specialization.");
+        System.out.println("Type 'Cancel' to return to the main menu or 'exit' to quit application.");
 
         Scanner scanner = new Scanner(System.in);
         String userInput = null;
@@ -266,7 +266,7 @@ public class Main {
                     scanner.nextLine();
                     try {
                         generateBillFromApntId(scanner);
-                    } catch (CancelInputException e) {
+                    } catch (CancelInputException | AppointmentNotFoundException e) {
                         System.out.println(e);
                     }
                     break;
@@ -316,7 +316,7 @@ public class Main {
                     scanner.nextLine();
                     try {
                         searchDoctorById(scanner);
-                    } catch (CancelInputException | EntityNotFoundException e) {
+                    } catch (CancelInputException | InvalidDataException e) {
                         System.out.println(e);
                     }
                     break;
@@ -467,11 +467,12 @@ public class Main {
             System.out.println(CREATE_PATIENT);
             System.out.println(SEARCH_PATIENT_BY_ID);
             System.out.println(SEARCH_PATIENT_BY_NAME);
+            System.out.println(SEARCH_PATIENT_BY_AGE);
             System.out.println(VIEW_PATIENTS);
             System.out.println(UPDATE_PATIENT_CONTACT);
             System.out.println(DELETE_PATIENT);
-            System.out.println("7. " + GO_BACK_TO_MAIN_MENU);
-            System.out.print(ENTER_CHOICE + " (1-7): ");
+            System.out.println("8. " + GO_BACK_TO_MAIN_MENU);
+            System.out.print(ENTER_CHOICE + " (1-8): ");
 
             subChoice = getUserChoice(scanner);
             System.out.println();
@@ -502,13 +503,21 @@ public class Main {
                     }
                     break;
                 case 4:
+                    scanner.nextLine();
+                    try {
+                        searchPatientByAge(scanner);
+                    } catch (CancelInputException | NumberFormatException | EntityNotFoundException e) {
+                        System.out.println(e);
+                    }
+                    break;
+                case 5:
                     try {
                         viewAllPatients();
                     } catch (EntityNotFoundException e) {
                         System.out.println(e);
                     }
                     break;
-                case 5:
+                case 6:
                     scanner.nextLine();
                     try {
                         updatePatientContact(scanner);
@@ -516,7 +525,7 @@ public class Main {
                         System.out.println(e);
                     }
                     break;
-                case 6:
+                case 7:
                     scanner.nextLine();
                     try {
                         deletePatient(scanner);
@@ -524,14 +533,41 @@ public class Main {
                         System.out.println(e);
                     }
                     break;
-                case 7:
+                case 8:
                     System.out.println(RETURNING_MAIN_MENU);
                     break;
                 default:
-                    System.out.println(INVALID_ENTRY + "1 and 7.");
+                    System.out.println(INVALID_ENTRY + "1 and 8.");
                     break;
             }
-        } while (subChoice != 7);
+        } while (subChoice != 8);
+    }
+
+    private static void searchPatientByAge(Scanner scanner) {
+        int age = 0;
+        String ageInput;
+        do {
+            System.out.print("Enter Patient age: ");
+            ageInput = readSafeInput(scanner);
+        } while (!Validator.isValidAge(ageInput));
+
+        try {
+            age = Integer.parseInt(ageInput);
+        } catch (NumberFormatException e) {
+            System.out.println("Invalid age entered. Please enter a valid age.");
+        }
+
+        List<Patient> patients = patientService.search(age);
+
+        if (patients != null && !patients.isEmpty()) {
+            System.out.println();
+            System.out.println(EQUALS + "Patient Details" + EQUALS);
+            for (Patient patient : patients) {
+                System.out.println(patient);
+            }
+        } else {
+            throw new EntityNotFoundException(" No patient records found for age " + age);
+        }
     }
 
     private static void deletePatient(Scanner scanner) {
@@ -585,7 +621,9 @@ public class Main {
         if (patients != null && !patients.isEmpty()) {
             System.out.println();
             System.out.println(EQUALS + "Patient Details" + EQUALS);
-            System.out.println(patients);
+            for (Patient patient : patients) {
+                System.out.println(patient);
+            }
         } else {
             throw new EntityNotFoundException(" Patient with Name " + patientName + " not found ");
         }
@@ -633,14 +671,14 @@ public class Main {
                     scanner.nextLine();
                     try {
                         searchAppointmentById(scanner);
-                    } catch (CancelInputException | EntityNotFoundException e) {
+                    } catch (CancelInputException | AppointmentNotFoundException e) {
                         System.out.println(e);
                     }
                     break;
                 case 3:
                     try {
                         viewAllAppointments();
-                    } catch (EntityNotFoundException e) {
+                    } catch (AppointmentNotFoundException e) {
                         System.out.println(e);
                     }
                     break;
@@ -648,13 +686,17 @@ public class Main {
                     scanner.nextLine();
                     try {
                         cancelAppointment(scanner);
-                    } catch (CancelInputException | InvalidDataException e) {
+                    } catch (CancelInputException | AppointmentNotFoundException | InvalidDataException e) {
                         System.out.println(e);
                     }
                     break;
                 case 5:
                     scanner.nextLine();
-                    viewDoctorAvailability(scanner);
+                    try {
+                        viewDoctorAvailability(scanner);
+                    } catch (CancelInputException | EntityNotFoundException e) {
+                        System.out.println(e);
+                    }
                     break;
                 case 6:
                     System.out.println(RETURNING_MAIN_MENU);
@@ -689,7 +731,7 @@ public class Main {
         System.out.println();
         System.out.println(EQUALS + "Appointment Details" + EQUALS);
         optionalAppointment.ifPresentOrElse(System.out::println, () -> {
-                    throw new EntityNotFoundException(" Appointment with ID " + finalAptId + " not found ");
+                    throw new AppointmentNotFoundException(finalAptId);
                 }
         );
     }
@@ -697,7 +739,7 @@ public class Main {
     private static void viewAllAppointments() {
         List<Appointment> appointments = appointmentService.findAllAppointments();
         if (appointments.isEmpty()) {
-            throw new EntityNotFoundException("No appointments found.");
+            throw new AppointmentNotFoundException("List");
         } else {
             System.out.println();
             System.out.println(EQUALS + "Appointment Details" + EQUALS);
@@ -796,7 +838,40 @@ public class Main {
             }
         }
 
-        Patient patient = patientService.createPatient(patientName, contact, dateOfBirth);
+        int notificationSubChoice = 0;
+        List<NotificationStrategy> notificationStrategies = new ArrayList<>();
+        do {
+            System.out.println("\n" + DASHES + NOTIFICATION_MENU + DASHES);
+            System.out.println(SMS);
+            System.out.println(EMAIL);
+            System.out.println(ALL);
+            System.out.println("4. " + GO_BACK_TO_MAIN_MENU);
+            System.out.print(ENTER_CHOICE + " (1-4): ");
+
+            notificationSubChoice = getUserChoice(scanner);
+            System.out.println();
+
+            switch (notificationSubChoice) {
+                case 1:
+                    notificationStrategies.add(new SMSNotifier());
+                    break;
+                case 2:
+                    notificationStrategies.add(new EmailNotifier());
+                    break;
+                case 3:
+                    notificationStrategies.add(new SMSNotifier());
+                    notificationStrategies.add(new EmailNotifier());
+                    break;
+                case 4:
+                    System.out.println(RETURNING_MAIN_MENU);
+                    break;
+                default:
+                    System.out.println(INVALID_ENTRY + "1 and 4.");
+                    break;
+            }
+        } while (!Validator.isValidNotificationStrategyChoice(notificationSubChoice));
+
+        Patient patient = patientService.createPatient(patientName, contact, dateOfBirth, notificationStrategies);
         System.out.println();
         System.out.println("Patient record created successfully! Patient ID: " + patient.getId());
     }
@@ -852,7 +927,7 @@ public class Main {
                     System.out.println(INVALID_ENTRY + "1-6.");
                     break;
             }
-        } while (!Validator.isValidPaymentChoice(subChoice));
+        } while (!Validator.isValidSpecializationChoice(subChoice));
 
         scanner.nextLine();
         String consultationAmountStr = null;
@@ -862,7 +937,41 @@ public class Main {
         } while (!Validator.isValidAmount(consultationAmountStr));
         double consultationAmount = Double.parseDouble(consultationAmountStr);
 
-        Doctor doctor = doctorService.createDoctor("Dr. " + doctorName, contact, specialization, consultationAmount);
+        int notificationSubChoice = 0;
+        List<NotificationStrategy> notificationStrategies = new ArrayList<>();
+        do {
+            System.out.println("\n" + DASHES + NOTIFICATION_MENU + DASHES);
+            System.out.println(SMS);
+            System.out.println(EMAIL);
+            System.out.println(ALL);
+            System.out.println("4. " + GO_BACK_TO_MAIN_MENU);
+            System.out.print(ENTER_CHOICE + " (1-4): ");
+
+            notificationSubChoice = getUserChoice(scanner);
+            System.out.println();
+
+            switch (notificationSubChoice) {
+                case 1:
+                    notificationStrategies.add(new SMSNotifier());
+                    break;
+                case 2:
+                    notificationStrategies.add(new EmailNotifier());
+                    break;
+                case 3:
+                    notificationStrategies.add(new SMSNotifier());
+                    notificationStrategies.add(new EmailNotifier());
+                    break;
+                case 4:
+                    System.out.println(RETURNING_MAIN_MENU);
+                    break;
+                default:
+                    System.out.println(INVALID_ENTRY + "1 and 4.");
+                    break;
+            }
+        } while (!Validator.isValidNotificationStrategyChoice(notificationSubChoice));
+
+        Doctor doctor = doctorService.createDoctor("Dr. " + doctorName, contact, specialization,
+                consultationAmount, notificationStrategies);
         System.out.println();
         System.out.println("Doctor added successfully! Doctor ID: " + doctor.getId());
     }
@@ -887,13 +996,8 @@ public class Main {
         do {
             System.out.print("Enter Appointment id: ");
             appointmentId = readSafeInput(scanner);
-            try {
-                Optional<Appointment> optionalAppointment = appointmentService.searchById(appointmentId);
-                appointment = optionalAppointment.orElse(null);
-            } catch (InvalidDataException e) {
-                System.out.println(EQUALS + " Appointment record for id " + appointmentId + " not found! " + EQUALS);
-                System.out.println(e);
-            }
+            Optional<Appointment> optionalAppointment = appointmentService.searchById(appointmentId);
+            appointment = optionalAppointment.orElse(null);
         } while (!Validator.isValidAppointmentId(appointmentId));
 
         if (appointment != null) {
@@ -952,7 +1056,7 @@ public class Main {
                     LocalDateTime.now(), billingStrategy, paymentStrategy);
 
         } else {
-            System.out.println(EQUALS + " Appointment record for id " + appointmentId + " not found! " + EQUALS);
+            throw new AppointmentNotFoundException(appointmentId);
         }
     }
 

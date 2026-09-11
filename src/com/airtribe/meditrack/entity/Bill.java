@@ -4,7 +4,6 @@ import com.airtribe.meditrack.interfaces.BillingStrategy;
 import com.airtribe.meditrack.interfaces.Payable;
 import com.airtribe.meditrack.interfaces.PaymentStrategy;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public class Bill extends MedicalEntity implements Payable {

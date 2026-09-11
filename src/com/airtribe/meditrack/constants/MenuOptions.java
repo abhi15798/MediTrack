@@ -19,7 +19,7 @@ public class MenuOptions {
     public static final String CREATE_DOCTOR = "1. Create Doctor";
     public static final String SEARCH_DOCTOR_BY_ID = "2. Search by Doctor Id";
     public static final String SEARCH_DOCTOR_BY_NAME = "3. Search by Doctor Name";
-    public static final String VIEW_DOCTORS = "4. View Doctors";
+    public static final String VIEW_DOCTORS = "4. View All Doctors";
     public static final String UPDATE_DOCTOR_FEE = "5. Update Doctor Fee";
     public static final String UPDATE_DOCTOR_CONTACT = "6. Update Doctor Contact";
     public static final String DELETE_DOCTOR = "7. Delete Doctor";
@@ -28,9 +28,10 @@ public class MenuOptions {
     public static final String CREATE_PATIENT = "1. Create Patient";
     public static final String SEARCH_PATIENT_BY_ID = "2. Search by Patient Id";
     public static final String SEARCH_PATIENT_BY_NAME = "3. Search by Patient Name";
-    public static final String VIEW_PATIENTS = "4. View Patients";
-    public static final String UPDATE_PATIENT_CONTACT = "5. Update Patient Contact";
-    public static final String DELETE_PATIENT = "6. Delete Patient";
+    public static final String SEARCH_PATIENT_BY_AGE = "4. Search by Patient Age";
+    public static final String VIEW_PATIENTS = "5. View All Patients";
+    public static final String UPDATE_PATIENT_CONTACT = "6. Update Patient Contact";
+    public static final String DELETE_PATIENT = "7. Delete Patient";
 
     public static final String APPOINTMENT_MANAG_SUBMENU = " APPOINTMENT MANAGEMENT SUB-MENU ";
     public static final String CREATE_APPOINTMENT = "1. Create Appointment";
@@ -43,6 +44,11 @@ public class MenuOptions {
     public static final String UPI_PAYMENT = "1. UPI";
     public static final String CASH_PAYMENT = "2. Cash";
     public static final String CARD_PAYMENT = "3. Card";
+
+    public static final String NOTIFICATION_MENU = " Please select your preferred notification mode ";
+    public static final String SMS = "1. SMS";
+    public static final String EMAIL = "2. Email";
+    public static final String ALL = "3. All";
 
     public static final String SPECIALIZATION_MENU = " Please select Doctor's specialization ";
     public static final String GENERAL_SPECIALIZATION = "1. General Physician";

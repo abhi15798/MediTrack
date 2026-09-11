@@ -1,7 +1,5 @@
 package com.airtribe.meditrack.entity;
 
-import com.airtribe.meditrack.util.IdGenerator;
-
 import java.time.LocalDateTime;
 import java.util.Objects;
 

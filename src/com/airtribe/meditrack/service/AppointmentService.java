@@ -1,13 +1,13 @@
 package com.airtribe.meditrack.service;
 
 import com.airtribe.meditrack.entity.*;
+import com.airtribe.meditrack.exception.AppointmentNotFoundException;
 import com.airtribe.meditrack.exception.InvalidDataException;
 import com.airtribe.meditrack.util.DataStore;
 import com.airtribe.meditrack.util.IdGenerator;
 
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 public class AppointmentService {
 
@@ -34,20 +34,25 @@ public class AppointmentService {
                 doctorId, patientId, timeSlotId);
 
         appointmentStore.save(appointmentId, appointment);
+        notifyObservers( "Mr. " + patient.getName() + " booked appointment with you at " + slot.getStartTime(), doctor);
+        notifyObservers("Your appointment booking with " + doctor.getName() + " is successful and scheduled at " + slot.getStartTime(), patient);
         return appointment;
     }
 
     public void cancelAppointment(String appointmentId) {
         Appointment appointment = searchById(appointmentId)
-                .orElseThrow(() -> new InvalidDataException("No appointment found with id " + appointmentId));
+                .orElseThrow(() -> new AppointmentNotFoundException(appointmentId));
 
         Doctor doctor = doctorService.searchById(appointment.getDoctorId());
+        Patient patient = patientService.searchById(appointment.getPatientId());
         TimeSlot slot = doctor.findTimeSlotById(appointment.getTimeSlotId())
                 .orElseThrow(() -> new InvalidDataException("No such time slot for this doctor"));
 
         slot.release(); // throws IllegalStateException if not BOOKED — fails loud, no silent cancellation
 
         appointmentStore.delete(appointmentId);
+        notifyObservers( "Mr. " + patient.getName() + " cancelled the appointment with you at " + slot.getStartTime(), doctor);
+        notifyObservers("Your appointment with " + doctor.getName() + " at " + slot.getStartTime() + " is cancelled.", patient);
     }
 
     public Optional<Appointment> searchById(String appointmentId) {
@@ -56,5 +61,13 @@ public class AppointmentService {
 
     public List<Appointment> findAllAppointments() {
         return appointmentStore.findAll();
+    }
+
+    public void notifyObservers(String message, Doctor doctor) {
+        doctor.update(message);
+    }
+
+    public void notifyObservers(String message, Patient doctor) {
+        doctor.update(message);
     }
 }

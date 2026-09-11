@@ -2,6 +2,7 @@ package com.airtribe.meditrack.service;
 
 import com.airtribe.meditrack.entity.Patient;
 import com.airtribe.meditrack.exception.InvalidDataException;
+import com.airtribe.meditrack.interfaces.NotificationStrategy;
 import com.airtribe.meditrack.interfaces.Searchable;
 import com.airtribe.meditrack.util.DataStore;
 import com.airtribe.meditrack.util.IdGenerator;
@@ -14,9 +15,9 @@ public class PatientService implements Searchable<Patient> {
 
     private final DataStore<Patient> patientStore = new DataStore<>();
 
-    public Patient createPatient(String name, String contact, LocalDate dob) {
+    public Patient createPatient(String name, String contact, LocalDate dob, List<NotificationStrategy> notificationStrategies) {
         String id = IdGenerator.getInstance().generateId("PAT");
-        Patient patient = new Patient(id, name, contact, dob);
+        Patient patient = new Patient(id, name, contact, dob, notificationStrategies);
         patientStore.save(id, patient);
         return patient;
     }
@@ -68,4 +69,5 @@ public class PatientService implements Searchable<Patient> {
     public int countCompletedAppointmentsPlaceholder() {
         throw new UnsupportedOperationException("This count lives on AppointmentService, not here");
     }
+
 }
